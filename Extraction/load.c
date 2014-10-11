@@ -2,6 +2,18 @@
 #include <stdio.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h> 
+
+int isFileExists(const char *path)
+{
+    FILE *file;
+    if (file = fopen(path, "r"))
+    {
+        fclose(file);
+        return 1;
+    }
+    return 0;
+}
+
 SDL_Surface* loadImage (char path[])
 {
 	SDL_Surface *image = NULL;
