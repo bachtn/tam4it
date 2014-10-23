@@ -16,9 +16,9 @@ struct vector
   int size;
 };
 
-double neuron (struct vector value, struct vector poids);
-double xorNeuro (double input1, double input2, struct vector poid);
-void improve (double input1, double input2, double result);
+double neuron (struct vector value, struct vector weight);
+double xorNeuro (double input1, double input2, struct vector weight);
+void improve (struct vector inputs, double result, struct vector weight);
 struct vector get_poid ();
 
 #endif
