@@ -81,20 +81,20 @@ struct linesInfo *lignesInfoArray(SDL_Surface *image)
   return arrayStruct;
 }
 
-int LineStartXcordinate(SDL_Surface *image, int lineLength, int lineYcordinate, int lineXcounterStart)
+int LineStartXcordinate(SDL_Surface *image, int lineHeight, int lineYcordinate, int lineXcounterStart)
 {
   //Variables Declaration
-  int *array = malloc(lineLength * sizeof(int));
+  int *array = malloc(lineHeight * sizeof(int));
   Uint32 pixel;
   int k, min;
 
   //Instructions
-  for (int i = 0; i < lineLength; ++i)
+  for (int i = 0; i < lineHeight; ++i)
   {
     array[i] = 0;
   }
   
-  for (int j = lineYcordinate; j < lineYcordinate + lineLength; ++j)
+  for (int j = lineYcordinate; j < lineYcordinate + lineHeight; ++j)
   {
     k = lineXcounterStart;
     pixel = getpixel(image, k, j);
@@ -107,7 +107,7 @@ int LineStartXcordinate(SDL_Surface *image, int lineLength, int lineYcordinate, 
   }
 
   min = array[0];
-  for (int j = 0; j < lineLength; ++j)
+  for (int j = 0; j < lineHeight; ++j)
   {
     if (array[j] < min)
       min = array[j];
