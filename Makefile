@@ -5,7 +5,7 @@ CC=clang
  LDFLAGS=
  LDLIBS= -lm `pkg-config --libs sdl` -lSDL_image
   
-SRC= Extraction/extract_text_bloc.c  main.c 
+SRC= Chargement/load.c  Extraction/extract_text_bloc.c  main.c 
 OBJ= ${SRC:.c=.o}
 	 
 all: main
@@ -13,5 +13,5 @@ all: main
 main: ${OBJ}
 	 
 clean:
-	rm -f *~ *.o
+	rm -f *~ *.o */*.o
 	rm -f main

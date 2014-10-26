@@ -2,8 +2,8 @@
 
 int isFileExists(const char *path)
 {
-    FILE *file;
-    if (file = fopen(path, "r"))
+    FILE *file = fopen(path, "r");
+    if (file)
     {
         fclose(file);
         return 1;

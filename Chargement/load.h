@@ -12,7 +12,7 @@
 #ifndef LOAD
 #define LOAD
 
-int isFileExists(const char *path);
+int isFileExist(const char *path);
 
 SDL_Surface* loadImage (char path[]);
 
