@@ -1,5 +1,4 @@
 # include "pixel_operations.h"
-#include <math.h>
 
 static inline
 Uint8* pixelref(SDL_Surface *surf, unsigned x, unsigned y)
