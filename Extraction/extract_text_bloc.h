@@ -16,17 +16,21 @@
 #define SIZE_MATRIX 3
 
 typedef struct{
-	int x;
-	int y;
+	size_t x;
+	size_t y;
 }Point;
 
 typedef struct{
+	size_t w,h;
 	int pixel_average;
 	Point origine;
 	int **mcase;
 }Pixel_Matrix;
 
 
-void detectTextBlock(SDL_Surface *img);
+Pixel_Matrix** detectTextBlock(SDL_Surface *img);
+
+void showTextBlock(SDL_Surface *screen, Pixel_Matrix **image_matrix);
 
 #endif
+

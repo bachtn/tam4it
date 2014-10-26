@@ -17,6 +17,9 @@ static void initPixelMatrix(Pixel_Matrix **image_matrix, size_t w, size_t h)
 			image_matrix[i][j].origine.x = w * i;
 			image_matrix[i][j].origine.y = h * j;
 
+			image_matrix[i][j].w = w;
+			image_matrix[i][j].h = h;
+
 			image_matrix[i][j].mcase = malloc(SIZE_MATRIX * sizeof(int*));
 			for(k = 0; k < SIZE_MATRIX; k++)
 				image_matrix[i][j].mcase[k]= malloc(SIZE_MATRIX * sizeof(int));
@@ -73,7 +76,7 @@ static void detectBlock(SDL_Surface *img, Pixel_Matrix image_matrix, size_t w, s
 
 }
 
-void detectTextBlock(SDL_Surface *img)
+Pixel_Matrix** detectTextBlock(SDL_Surface *img)
 {
 	size_t wx_matrix = img->w/MATRIX_ACCURACY;
 	size_t hy_matrix = img->h/MATRIX_ACCURACY;
@@ -88,10 +91,31 @@ void detectTextBlock(SDL_Surface *img)
 			detectBlock(img, image_matrix[i][j], wx_matrix, hy_matrix);
 		}
 	}
+
+	return image_matrix;
+}
+
+static void drawMatrixCase(SDL_Surface *screen, const Point origine, const size_t w, const size_t h, const size_t x, const size_t y)
+{
+	SDL_Rect mcase = {origine.x + x * w, origine.y + y * h, w, h};
+	SDL_FillRect(screen, &mcase, SDL_MapRGBA(screen->format,255,0,0,100));
 }
 
 void showTextBlock(SDL_Surface *screen, Pixel_Matrix **image_matrix)
 {
-	//FIX ME
+	size_t i,j,x,y;
+	
+
+	for(i = 0; i < MATRIX_ACCURACY; i++){
+		for(j = 0; j < MATRIX_ACCURACY; j++){
+			for(x = 0; x < SIZE_MATRIX; x++){
+				for(y = 0; y < SIZE_MATRIX; y++){
+					if(image_matrix[i][j].mcase[x][y] > 0){
+						drawMatrixCase(screen, image_matrix[i][j].origine, image_matrix[i][j].w, image_matrix[i][j].h, x, y);
+					}
+				}
+			}
+		}
+	}	
 
 }
