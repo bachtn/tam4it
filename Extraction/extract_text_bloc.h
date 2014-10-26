@@ -9,4 +9,19 @@
 
 #endif
 
+#define MATRIX_ACCURACY 10
+#define SIZE_MATRIX 3
 
+typedef struct{
+	int x;
+	int y;
+}Point;
+
+typedef struct{
+	int pixel_average;
+	Point origine;
+	int **mcase;
+}Pixel_Matrix;
+
+
+void detectTextBlock(SDL_Surface *img);
