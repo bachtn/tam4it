@@ -24,16 +24,3 @@ SDL_Surface* loadImage (char path[])
 		return NULL;
 	}
 }
-
-SDL_Surface* convertToBmp (SDL_Surface *img)
-{
-	
-}
-
-int main(int argc, char *argv[]) // used until the creation of a makefile
-{
-	//loadImage("~//Téléchargement//Test_sdl_image//sapin.png");
-	loadImage(argv[0]);
-	return 0;
-}
-
