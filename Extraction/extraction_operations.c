@@ -1,7 +1,3 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <SDL/SDL.h>
-#include <SDL.h>
 #include "extraction_operations.h"
 #include "pixel_operations.h"
 
