@@ -30,7 +30,6 @@ typedef struct{
 
 Pixel_Matrix** detectTextBlock(SDL_Surface *img);
 
-void showTextBlock(SDL_Surface *screen, Pixel_Matrix **image_matrix);
+void showTextBlock(SDL_Surface *screen, Pixel_Matrix **image_matrixs);
 
 #endif
-

@@ -14,4 +14,4 @@ main: ${OBJ}
 
 clean:
 	rm -f *~ *.o
-	rm -f main
+	rm -f neuron 
