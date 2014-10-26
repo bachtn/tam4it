@@ -9,6 +9,9 @@
 
 #endif
 
+#ifndef EXTRACT_TBLOCK
+#define EXRACT_TBLOCK
+
 #define MATRIX_ACCURACY 10
 #define SIZE_MATRIX 3
 
@@ -25,3 +28,5 @@ typedef struct{
 
 
 void detectTextBlock(SDL_Surface *img);
+
+#endif
