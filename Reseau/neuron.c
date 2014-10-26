@@ -2,7 +2,7 @@
 
 #define LEARNING_RATE 0.7
 
-double neuron (struct vector *value, struct vector *weight, int start, int end) //FIX ME
+double neuron (struct vector *value, struct vector *weight, int start, int end) //std neuron
 {
   double r = 0;
   for(int i = start; i < end; i++)
@@ -10,8 +10,9 @@ double neuron (struct vector *value, struct vector *weight, int start, int end) 
   return 1 /(1 + exp(-(r - weight[0])));
 }
 
-double xorNeuro (double input1, double input2, struct vector *weight)
+double xorNeuro (double input1, double input2) //XOR neural network
 {
+  struct vector *weight = get_weight();
   struct vector *input = malloc (sizeof (struct vector)), 
     *tempo = malloc (sizeof (struct vector));
   
@@ -28,11 +29,11 @@ double xorNeuro (double input1, double input2, struct vector *weight)
   return neuron (tempo, weight, 5, 6);
 }
 
-void improveWeight (struct vector *inputs, double result, struct vector *weight)
+void improveWeight (struct vector *inputs, double result) //improve weight for XOR
 {
   double error, out, dif, f;
 
-  out=  xorNeuro(inputs->data[0], inputs->data[1], weight);
+  out=  xorNeuro(inputs->data[0], inputs->data[1]);
   error = result - out;
   
   dif = out * (1 - out) * error;
@@ -42,7 +43,7 @@ void improveWeight (struct vector *inputs, double result, struct vector *weight)
         
   f = weight->data[5] + weight->data[6];
 
-  dif = xorNeuro(inputs->data[0], inputs->data[1], weight) * (1 - xorNeuro(inputs->data[0], inputs->data[1], weight)) * f;
+  dif = xorNeuro(inputs->data[0], inputs->data[1]) * (1 - xorNeuro(inputs->data[0], inputs->data[1])) * f;
 
   weight->data[1] += LEARNING_RATE * dif * inputs->data[0];
   weight->data[2] += LEARNING_RATE * dif * inputs->data[1];
@@ -52,7 +53,7 @@ void improveWeight (struct vector *inputs, double result, struct vector *weight)
   set_weight (weight);
 }
 
-struct vector get_weight ()
+struct vector get_weight () // get weight from poid.txt
 {
   FILE *weight_txt = fopen ("poid.txt", "r");
   char *actualNumber[8] = {0};
@@ -84,7 +85,7 @@ struct vector get_weight ()
   return weight;
 }
 
-void set_weight (struct vector *weight) //code safe OF COURSE
+void set_weight (struct vector *weight) //change weight in poid.txt
 {
   FILE *txt = fopen ("poid.txt", "w+");
   
@@ -93,7 +94,7 @@ void set_weight (struct vector *weight) //code safe OF COURSE
   fclose(weight_txt);
 }
 
-double toDouble(const char* s, int start, int stop) {
+double toDouble(const char* s, int start, int stop) { //just a cast function
   unsigned long long int m = 1;
   double ret = 0;
   for (int i = stop; i >= start; i--)
