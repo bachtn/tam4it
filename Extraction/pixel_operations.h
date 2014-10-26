@@ -1,9 +1,17 @@
+#ifndef STDLIB_STDIO
+#define STDLIB_STDIO
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+#include <SDL/SDL.h>
+#include <SDL/SDL_image.h>
+
+#endif
+
 # ifndef PIXEL_OPERATIONS_H_
 # define PIXEL_OPERATIONS_H_
- 
-# include <stdlib.h>
-# include <SDL.h>
- 
+
 Uint32 getpixel(SDL_Surface *surface, unsigned x, unsigned y);
 void putpixel(SDL_Surface *surface, unsigned x, unsigned y, Uint32 pixel);
 void Greyscale(SDL_Surface *image);
