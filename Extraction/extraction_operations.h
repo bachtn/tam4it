@@ -1,3 +1,14 @@
+#ifndef STDLIB_STDIO
+#define STDLIB_STDIO
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <SDL/SDL.h>
+#include <SDL.h>
+#include <math.h>
+
+#endif
+
 #ifndef EXTRACTION_OPERATIONS_H_
 #define EXTRACTION_OPERATIONS_H_
 

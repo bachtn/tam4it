@@ -13,21 +13,27 @@
 #define EXTRACT_CHAR
 
 typedef struct{
-	int x,y;
-	int weight,hight;
+  int x,y;
+  int weight,hight;
 }TextBloc;
 
 typedef struct{
-	int hight;
-	int x,y;
+  int hight, width;
+  int x,y;
 }Line;
 
-typedef struct{
-	int x,y;
-	CharList *next;
+typedef struct charCoordonateNode{
+  int x,y;
+  int hight, width;
+  struct charCoordonateNode *next;
+}CharCoordonateNode;
 
-}CharNode;
+typedef struct
+{
+  CharCoordonateNode *first;
+}CharCoordonate;
 
-void getPixelByCollumn( SDL_Surface* img, Line l);
+CharCoordonate* getCharInCoord (SDL_Surface* img, Line *l);
+void drawChar (SDL_Surface* img, CharCoordonate *c);
 
 #endif

@@ -1,9 +1,9 @@
 #include "load.h"
 
-int isFileExists(const char *path)
+int isFileExist(const char *path)
 {
-    FILE *file;
-    if (file = fopen(path, "r"))
+    FILE *file = fopen(path, "r");
+    if (file)
     {
         fclose(file);
         return 1;
@@ -24,16 +24,3 @@ SDL_Surface* loadImage (char path[])
 		return NULL;
 	}
 }
-
-SDL_Surface* convertToBmp (SDL_Surface *img)
-{
-	
-}
-
-int main(int argc, char *argv[]) // used until the creation of a makefile
-{
-	//loadImage("~//Téléchargement//Test_sdl_image//sapin.png");
-	loadImage(argv[0]);
-	return 0;
-}
-
