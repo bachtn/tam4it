@@ -5,7 +5,7 @@ CC=clang
  LDFLAGS=
  LDLIBS= -lm `pkg-config --libs sdl` -lSDL_image
   
-SRC= Extraction/extract_char.c main.c 
+SRC= Extraction/extract_char.c Extraction/extraction_operations.c Extraction/pixel_operations.c Main-functions/main_functions.c Main-functions/SDl_functions.c main.c 
 OBJ= ${SRC:.c=.o}
 	 
 all: main
