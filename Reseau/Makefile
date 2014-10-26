@@ -1,6 +1,6 @@
 CC=clang
 
- CPPFLAGS= `pkg-config --cflags sdl`
+ CPPFLAGS=
  CFLAGS= -Wall -Wextra -std=c99 -O3
  LDFLAGS=
  LDLIBS= -lm `pkg-config --libs sdl` -lSDL_image
