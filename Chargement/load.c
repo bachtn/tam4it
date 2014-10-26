@@ -1,6 +1,6 @@
 #include "load.h"
 
-int isFileExists(const char *path)
+int isFileExist(const char *path)
 {
     FILE *file = fopen(path, "r");
     if (file)
