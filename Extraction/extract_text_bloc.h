@@ -12,24 +12,16 @@
 #ifndef EXTRACT_TBLOCK
 #define EXRACT_TBLOCK
 
-#define MATRIX_ACCURACY 10
-#define SIZE_MATRIX 3
+typedef struct TextBlocList{
+  int x,y;
+  int w,h;
 
-typedef struct{
-	size_t x;
-	size_t y;
-}Point;
-
-typedef struct{
-	size_t w,h;
-	int pixel_average;
-	Point origine;
-	int **mcase;
-}Pixel_Matrix;
+  TextBlocList *next;
+}
 
 
-Pixel_Matrix** detectTextBlock(SDL_Surface *img);
+int pxCountNeightbours(SDL_Surface *img, int x, int y, int radius); //Get the number of black pixel near the coordinate pixel x,y with a radius
 
-void showTextBlock(SDL_Surface *screen, Pixel_Matrix **image_matrixs);
+
 
 #endif

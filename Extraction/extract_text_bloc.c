@@ -1,129 +1,97 @@
 #include "extract_text_bloc.h"
 #include "../Pre-traitement/pixel_operations.h"
 
-Pixel_Matrix** initPixelMatrix(size_t w, size_t h)
-{
-	Pixel_Matrix **matrixs= NULL;
+#define DEBUG 1
 
-	matrixs = malloc(MATRIX_ACCURACY * sizeof(Pixel_Matrix *));
-	for(size_t i = 0; i < w; i++){
-		matrixs[i] = malloc(MATRIX_ACCURACY
-			       	* sizeof(Pixel_Matrix *));
+int pxCountNeightbours( SDL_Surface *img, int x, int y, int radius)
+{	
+	if(DEBUG)
+		printf("%s called",__func__);
 
-	for(size_t i = 0; i < w; i++){
-		for(size_t j = 0; i < h; j++){
-			matrixs[i][j] = malloc(w * sizeof(int*));
-			for (size_t x = 0; x < w; x++){
-				matrixs[i][j].mcase[x] = malloc(w * sizeof(int));
-
-				matrixs[i][j].w = w;
-				matrixs[i][j].h = h;
-				matrixs[i][j].pixel_average = -1;
-
-				matrixs[i][j].origine.x = i *w;
-				matrixs[i][j].origine.y = j *h;
-			}
-
-			for(size_t x = 0; x < w; x++){
-				for(size_t y = 0; y < h; y++){
-					matrixs[i][j].mcase[x][y] = -1;
-				}
-			}
-		}
+	if(!img){
+		printf("<Error> code 0x40 in %s",__func__);
+		return 0x42; //call Send_Exception(0x42);
+	}
+	if(x < 0 || y < 0 || radius <= 0){
+		printf("<Error> code 0x43 in %s",__func__);
+		return 0x43; //call SendException(0x43);
 	}
 
-	return matrixs;
+	int xmin,xmax,ymin,ymax,count = 0;
+
+  xmin = x - radius; xmax = x + radius;
+  ymin = y - radius; ymax = y + radius;
+
+	for(int i; xmin <0 && i <= radius; i++)
+		xmin++;
+
+	for(int i; ymin <0 && i <= radius; i++)
+		ymin++;
+
+	for(int i; xmax > img->w && i <= radius; i++)
+		xmax--;
+
+	for(int i; ymax > img->h && i <= radius; i++)
+		ymax--;
+
+	for(int i = xmin; i <= xmax; i++)
+		for(int j = ymin; j <= ymax; j++)
+     if(getpixel(img, (unsigned)i, (unsigned)j) > 0)
+       count++;
+
+	return count;
 }
 
-static void detectBlock(SDL_Surface *img, Pixel_Matrix *matrix, size_t i, size_t j)
+void compareTextBlocPoint(int *x, int *y,int *v, int *w, int radius)
 {
-	Uint32 px;
-	int average = 0;
+	int xmin,xmax,ymin,ymax;
 
-	for(size_t x = 0; x < matrix[0][0]->w; x++){
-		for(size_t y = 0; y < matrix[0][0]->h; y++){
-			px = getpixel(img, x + i * matrix[x][y]->w, y + j * matrix[x][y]->h);
-			if(!px)
-				average ++;
-		}
-	}
+  xmin = *x - radius; xmax = *x + radius;
+  ymin = *v - radius; ymax = *w + radius;
 
-	average /= matrix[0][0]->w * matrix[0][0]->h;
+	for(int i; xmin <0 && i <= radius; i++)
+		xmin++;
 
-	
+	for(int i; ymin <0 && i <= radius; i++)
+		ymin++;
 
+	for(int i; xmax > img->w && i <= radius; i++)
+		xmax--;
 
+	for(int i; ymax > img->h && i <= radius; i++)
+		ymax--;
+
+  for(int i = xmin; i <= xmax; i++)
+		for(int j = ymin; j <= ymax; j++)
+      if(getpixel(img, (unsigned)i, (unsigned)j) > 0){
+        if(xmin < *x)
+          *x = i;
+        if(ymin < *y)
+          *y = j;
+        if(xmax > *v)
+         *v = xmax;
+        if(ymax > *w)
+         *w = ymax; 
+      }
 }
 
-static void printImgPixel(SDL_Surface *img)
+TextBlocList* detectBlocs(SDL_Surface *img, int detection_radius)
 {
-	int x,y,px = 0;
-	for(x = 0; x < img->w; x++){
-		for(y = 0; y < img->h; y++){
-			px ++;
-			if(getpixel(img,x,y) > 0)
-				printf("0");
-			else
-				printf("1");
-		}
-		printf("\n");
-	}
+ 	if(!img){
+		printf("<Error> code 0x40 in %s",__func__);
+		return 0x42; //call Send_Exception(0x42);
+  }
 
-	printf("px count : %d\n",px);
+  TextBlocList *tb;
 
-}
+  for(int i = 0; i < img->w; i++)
+    for(int j = 0; j < img->h; j++){
+      //fix Me
 
-Pixel_Matrix** detectTextBlock(SDL_Surface *img)
-{
-	printImgPixel(img);
-	
-	size_t w = img->w/MATRIX_ACCURACY;
-	size_t h = img->h/MATRIX_ACCURACY;
-
-	size_t i,j;
-
-	Pixel_Matrix **matrixs = initPixelMatrix(w, h);
-
-	for(i = 0; i < MATRIX_ACCURACY; i++){
-		for(j = 0; j < MATRIX_ACCURACY; j++){
-			detectBlock(img, matrixs[i][j], w, h);
-		}
-	}
-
-	return image_matrixs;
-}
-
-static void drawMatrixCase(SDL_Surface *screen, Point origine, size_t w, size_t h, size_t x, size_t y)
-{
-	SDL_Rect mcase;
-
-	mcase.x = origine.x + x * w;
-	mcase.y = origine.y + y * h;
-	mcase.w = w;
-	mcase.h = h;
-
-	SDL_FillRect(screen, &mcase, SDL_MapRGBA(screen->format,255,0,0,100));
-}
+    }
+      
 
 
-
-
-void showTextBlock(SDL_Surface *screen, Pixel_Matrix **image_matrix)
-{
-	size_t i,j,x,y;
-
-
-	for(i = 0; i < MATRIX_ACCURACY; i++){
-		for(j = 0; j < MATRIX_ACCURACY; j++){
-			for(x = 0; x < SIZE_MATRIX; x++){
-				for(y = 0; y < SIZE_MATRIX; y++){
-					if(image_matrix[i][j].mcase[x][y] > 0){
-						//printf("[%zu][%zu]:[%zu][%zu]=%d\n",i,j,x,y,image_matrix[i][j].mcase[x][y]); 
-						drawMatrixCase(screen, image_matrix[i][j].origine, image_matrix[i][j].w, image_matrix[i][j].h, x, y);
-					}
-				}
-			}
-		}
-	}	
+  return tb;
 
 }
