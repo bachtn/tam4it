@@ -1,5 +1,5 @@
 #include "extraction_operations.h"
-#include "pixel_operations.h"
+#include "../Pre-traitement/pixel_operations.h"
 
 int *nbLinesZero(SDL_Surface *image)
 {
