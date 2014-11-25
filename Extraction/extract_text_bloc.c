@@ -43,6 +43,34 @@ int pxCountNeightbours( SDL_Surface *img, int x, int y, int radius)
 }
 
   static inline
+int getRadius( SDL_Surface *img)
+{
+	int r=0,n=0;
+	char c='w';
+	
+	for(int i = 0; i < img->w; i++)
+		for(int j = 0; j < img->h; j++){
+			if( b=='b' && getpixel(img,i,j)>0)
+				r++;
+			else if(b=='w' && getpixel(img,i,j)<0){
+				r++;
+				n++;
+			}
+			else if(b=='w'&& getpixel(img,i,j)<0)
+				b = 'w';
+			if( b=='b' && getpixel(img,j,i)>0)
+				r++;
+			else if(b=='w' && getpixel(img,j,i)<0){
+				r++;
+				n++;
+			}
+			else if(b=='w'&& getpixel(img,j,i)<0)
+				b = 'w';
+		}
+	return r/n;
+}
+
+  static inline
 int compareTextBlocPoint(TextBlocList *tb, SDL_Surface *img, int radius)
 {
   int xmin,xmax,ymin,ymax;
@@ -141,7 +169,7 @@ TextBlocList* detectTextBlocs(SDL_Surface *img)
 
   tb = addTextBloc(tb,0,0);
    showTextBlocList(tb);
-  radius = 5; //fix me
+  radius = getRadius(img);
 
   for(int i = 0; i < img->w; i++)
     for(int j = 0; j < img->h; j++){
