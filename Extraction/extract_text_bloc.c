@@ -52,22 +52,22 @@ int getRadius( SDL_Surface *img)
 		for(int j = 0; j < img->h; j++){
 			if( b=='b' && getpixel(img,i,j)>0)
 				r++;
-			else if(b=='w' && getpixel(img,i,j)==0){
+			else if(b=='w' && getpixel(img,i,j)>0){
 				r++;
 				n++;
 				b = 'b';
 			}
 			else if(b=='w'&& getpixel(img,i,j)==0)
-				b = 'w';
+				b = 'b';
 			if( b=='b' && getpixel(img,j,i)>0)
 				r++;
-			else if(b=='w' && getpixel(img,j,i)==0){
+			else if(b=='w' && getpixel(img,j,i)>0){
 				r++;
 				n++;
 				b = 'b';
 			}
 			else if(b=='w'&& getpixel(img,j,i)==0)
-				b = 'w';
+				b = 'b';
 		}
 	return r/n;
 }
