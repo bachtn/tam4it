@@ -1,11 +1,11 @@
 CC=clang
 
- CPPFLAGS=
- CFLAGS= -Wall -Wextra -std=c99 -O3
- LDFLAGS=
- LDLIBS= -lm `pkg-config --libs sdl` -lSDL_image
-  
-SRC=Pre-traitement/pixel_operations.c Extraction/extract_text_bloc.c Chargement/load.c  Extraction/extract_char.c Extraction/extraction_operations.c main.c 
+CPPFLAGS= `pkg-config --cflags sdl gtk+-2.0`
+CFLAGS= -Wall -Wextra  -std=c99 -O3
+LDFLAGS=
+LDLIBS=`pkg-config --libs sdl gtk+-2.0` -lSDL_image
+
+SRC= Chargement/load.c Pretraitement/pixel_operations.c Pretraitement/pretraitement.c Extraction/extract_text_bloc.c Extraction/extraction_operations.c main.c
 
 OBJ= ${SRC:.c=.o}
 
@@ -14,5 +14,7 @@ all: main
 main: ${OBJ}
 
 clean:
-	rm -f *~ *.o */*.o *.swp */*.swp
-	rm -f main
+	  rm -f *~ *.o */*.o .*.swp *.swp */.*.swp */*.swp Result/*
+	  rm -f main
+
+#
