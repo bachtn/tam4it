@@ -1,11 +1,11 @@
 #include "rotation.h"
 
-void rotation(SDL_Surface *img, float angle)
+void rotation(SDL_Surface *img, double angle)
 {
         int diagonal, centre_x, centre_y;
         SDL_Surface *new_img;
 
-        diagonal = (sqrt((img->w)(img->w) + (img->h)(img->h))) + 1;
+        diagonal = (sqrt((img->w)*(img->w) + (img->h)*(img->h))) + 1;
         new_img = SDL_CreateRGBSurface(0, diagonal, diagonal, 32,
                         rmask, gmask, bmask, amask);
 
@@ -17,8 +17,8 @@ void rotation(SDL_Surface *img, float angle)
         {
                 for(int y = 0; y<img->h; y++)
                 {
-                        putpixel(new_img, (x-centre_x)*cosf(angle) + centre_x, 
-                                        (y-centre_y)*sinf(angle) + centre_y, 
+                        putpixel(new_img, (x-centre_x)*cos(angle) + centre_x, 
+                                        (y-centre_y)*sin(angle) + centre_y, 
                                         getpixel(img, x, y));
                 }
         }
