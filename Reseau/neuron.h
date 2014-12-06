@@ -12,9 +12,9 @@
 #ifndef NEURO
 #define NEURO
 
-#include <string.h>
+#include <math.h>
 
-//double neuron (struct vector *value, struct vector *weight, int start, int end);
+int neuron (int values[256], float weight[1][257], int idNeur);
 //double xorNeuro (double input1, double input2, struct vector *weight);
 //void improveWeight (struct vector *inputs, double result);
 float **get_weight ();

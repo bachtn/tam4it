@@ -2,34 +2,19 @@
 
 #define LEARNING_RATE 0.7
 
-/*double neuron (struct vector *value, struct vector *weight, int start, int end) //std neuron
-{
-  double r = 0;
-  for(int i = start; i < end; i++)
-    r = r + value->data[i]*weight->data[i];
-  return 1 /(1 + exp(-(r - weight->data[0])));
+float functionSig (float x){
+  return 1 / (1 + exp (x));
 }
 
-double xorNeuro (double input1, double input2, struct vector *weight) //XOR neural network
-{
-  struct vector *input = malloc (sizeof (struct vector)),  *tempo = malloc (sizeof (struct vector));
-
-  input->size = 2;
-  input->data = malloc (sizeof (double) * 5);
-  input->data[1] = input1;
-  input->data[2] = input2;
-  input->data[3] = input1;
-  input->data[4] = input2;
-  
-  tempo->size = 2;
-  tempo->data = malloc (sizeof (double) * 7);
-  tempo->data[5] = neuron (input, weight, 1, 2);
-  tempo->data[6] = neuron (input, weight, 3, 4);
-
-  return neuron (tempo, weight, 5, 6);
+int neuron (int values[256], float weight[1][257], int idNeur){ //standart neuron
+  float tempo = 0;
+  for (int i = 0; i < 256; i++)
+    tempo += values[i] + weight[idNeur][i];
+  tempo -= weight[idNeur][256];
+  return functionSig (tempo) >= 0.5;
 }
 
-void improveWeight (struct vector *inputs, double result) //improve weight for XOR
+/*void improveWeight (struct vector *inputs, double result) //improve weight for XOR
 {
   struct vector *weight = get_weight();
   double error, out, dif, f;
@@ -95,7 +80,10 @@ int main(int argc, char *argv[])
       printf("weights.wgt initialized\n");
       break;
     case 'i':
-      //RAJOUTER LE CODE D'IMPROVEMENT
+      //ADD IMPROVEMENT HERE
+      break;
+    case 't':
+      //TEST HERE
       break;
     default:
       printf("wrong arguments");
