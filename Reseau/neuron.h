@@ -14,17 +14,10 @@
 
 #include <string.h>
 
-struct vector
-{
-  double *data;
-  int size;
-};
-
-double neuron (struct vector *value, struct vector *weight, int start, int end);
-double xorNeuro (double input1, double input2, struct vector *weight);
-void improveWeight (struct vector *inputs, double result);
-struct vector *get_weight ();
-void set_weight (struct vector *weight);
-double toDouble(const char* s, int start, int stop);
+//double neuron (struct vector *value, struct vector *weight, int start, int end);
+//double xorNeuro (double input1, double input2, struct vector *weight);
+//void improveWeight (struct vector *inputs, double result);
+float **get_weight ();
+void set_weight (float **weight);
 
 #endif

@@ -2,7 +2,7 @@
 
 #define LEARNING_RATE 0.7
 
-double neuron (struct vector *value, struct vector *weight, int start, int end) //std neuron
+/*double neuron (struct vector *value, struct vector *weight, int start, int end) //std neuron
 {
   double r = 0;
   for(int i = start; i < end; i++)
@@ -52,35 +52,58 @@ void improveWeight (struct vector *inputs, double result) //improve weight for X
   weight->data[4] += LEARNING_RATE * dif * inputs->data[1];   //DOUTE pour mettre a jour les poids.
 
   set_weight (weight);
+}*/
+
+float **get_weight () //read weight.wgt and return it values
+{
+  FILE *weight_file = fopen ("poid.txt", "rb");
+  float **weights = malloc (sizeof (float[256]));
+  for (int i = 0; i < 256; i ++)
+    weights[i] = malloc (sizeof (float[100]));
+
+  fread (weights, sizeof (float[100]), 256, weight_file);
+
+  fclose(weight_file);
+  return weights;
 }
 
-struct vector *get_weight () // get weight from poid.txt FOR XOR ONLY
+void set_weight (float **weight) //set weight.wgt to new value
 {
-  FILE *weight_txt = fopen ("poid.txt", "r");
-
-  struct vector *weight = malloc (sizeof(struct vector));
-  weight->data = malloc(sizeof(int)*700);
-  weight->size = 0;
-
-  fscanf(weight_txt, "%lf/n%lf %lf/n%lf %lf/n%lf %lf", &weight->data[0], &weight->data[1], &weight->data[2], &weight->data[3], &weight->data[4], &weight->data[5], &weight->data[6]);
-
-  fclose(weight_txt);
-  return weight;
-}
-
-void set_weight (struct vector *weight) //change weight in poid.txt
-{
-  FILE *txt = fopen ("poid.txt", "w+");
+  FILE *weight_file = fopen ("poid.txt", "wb");
   
-  fprintf(txt, "%lf/n%lf %lf/n%lf %lf/n%lf %lf", weight->data[0],  weight->data[1], weight->data[2], weight->data[3], weight->data[4], weight->data[5], weight->data[6]);
+  fwrite (weight, sizeof (float[100]), 256, weight_file);
 
-  fclose(txt);
+  fclose(weight_file);
 }
 
-int main(int argc, char* argv[])
+void initializationWeights () //create and initialized weight.wgt to 0
 {
-  if (argc != 3)
-    return 1;
-  printf ("%lf\n", xorNeuro (atof (argv [1]), atof(argv [2]), get_weight()));
+  FILE *weight_file = fopen ("weights.wgt", "wb");
+  float matrix[256][100] = {{0}}; //#themovieofcourse
+
+  fwrite (matrix, sizeof (float[100]), 256, weight_file);
+  
+  fclose (weight_file);
+}
+
+int main(int argc, char *argv[])
+{
+  if (argc > 1){
+    switch (*argv[1]){
+    case '0':
+      initializationWeights ();
+      printf("weights.wgt initialized\n");
+      break;
+    case 'i':
+      //RAJOUTER LE CODE D'IMPROVEMENT
+      break;
+    default:
+      printf("wrong arguments");
+      break;
+    }
+      
+  }
+  else
+    printf ("no arguements\n");
   return 0;
 }
