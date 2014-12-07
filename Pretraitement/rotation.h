@@ -28,5 +28,6 @@
 #endif
 
 void rotation(SDL_Surface *img, double angle);
+void detection(SDL_Surface *image);
 
 # endif
