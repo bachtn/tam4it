@@ -16,6 +16,7 @@
 #include "Chargement/load.h"
 #include "Extraction/extraction_operations.h"
 #include "Extraction/extract_text_bloc.h"
+#include "Pretraitement/rotation.h"
 
 static GtkWidget *text_view;
 
@@ -25,7 +26,7 @@ void saisir_fichier(/*GtkWidget *bouton,*/ GtkWidget *file_selection);
 void ouvrir_img(GtkButton *button, GtkImage *pImage);
 void save();
 void retablir_img(GtkButton *button, GtkImage *pImage);
-int interface (int argc, char**argv);
+void  interface (int argc, char**argv);
 
 
 void wait_for_keypressed(void)
@@ -115,6 +116,32 @@ void binary()
   SDL_FreeSurface(img);
 }
 
+void rot_img(int **rot)
+{
+  char* bckp = "./Result/backup.bmp";
+  char* output = "./Result/output.bmp";
+  char* output_r = "./Result/rotation.bmp";
+
+  printf("%d\n",*(*rot));
+
+  SDL_Surface *img = NULL;
+
+  if(isFileExist(output))
+    img = loadImage(output);
+  else if(isFileExist(bckp))
+    img = loadImage(bckp);
+  else
+    exit(EXIT_FAILURE);
+
+  rotation(&img,M_PI*10/180);
+
+  SDL_SaveBMP(img, output_r);
+  SDL_SaveBMP(img,  output);
+
+  SDL_FreeSurface(img);
+
+}
+
 void extract_data_from_image()
 {
   char* bckp = "./Result/backup.bmp";
@@ -164,7 +191,7 @@ int main (int argc, char* argv[])
 {
   SDL_Surface *img = NULL;
 
-  if(argc == 2 && isFileExist(argv[1]))
+  if((argc == 2 || argc == 3) && isFileExist(argv[1]))
   {
     img = loadImage(argv[1]);
     SDL_SaveBMP(img,"./Result/backup.bmp");
@@ -172,6 +199,7 @@ int main (int argc, char* argv[])
     remove("./Result/binary.bmp");
     remove("./Result/grey");
     remove("./Result/output.bmp");
+    remove("./Result/rotation.bmp");
     SDL_FreeSurface(img);
   }
   else
@@ -185,7 +213,21 @@ int main (int argc, char* argv[])
   return EXIT_SUCCESS;
 }
 
-int interface(int argc, char **argv)
+int string_to_int(char *s)
+{
+	int r = 0;
+	int i = 0;
+	while(i<3)
+	{
+		r*=10;
+		r+=(int) *s;
+		s++;
+		i++;
+	}
+	return r;
+}
+
+void interface(int argc, char **argv)
 {
   /* Initialisation de GTK+ */
   GtkWidget *pWindow, 
@@ -204,6 +246,8 @@ int interface(int argc, char **argv)
   GtkWidget  *pImage;
   gtk_init(&argc, &argv);
 
+  int rot = 0;
+ 
   pWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL); //Creation
   gtk_window_set_title(GTK_WINDOW(pWindow), "Mental Twist Algorithm");
   gtk_window_set_default_size(GTK_WINDOW(pWindow), 1000, 1000);
@@ -217,8 +261,6 @@ int interface(int argc, char **argv)
   pVbox = gtk_vbox_new(TRUE, 0);
   gtk_box_pack_start(GTK_BOX(pHbox), pVbox, TRUE, TRUE, 0);
 
-
-
   /* 1ere frame */ /*contient l'image*/
   pVbox1Frame = gtk_frame_new("Texte Original"); 
   gtk_box_pack_start(GTK_BOX(pVbox), pVbox1Frame, TRUE, TRUE, 0); /*Inclus dans VBox1*/
@@ -230,13 +272,15 @@ int interface(int argc, char **argv)
   gtk_box_pack_start(GTK_BOX(pVbox1), scrollbar, TRUE, TRUE, 5);
 
   pImage = NULL;
-  if(argc == 2)
+  if(argc == 2 || argc ==3)
   {
     GError *err =NULL;
     GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file(argv[1],&err);
     pImage=gtk_image_new_from_pixbuf(pixbuf);
 
   }
+  if(argc==3)
+    rot = string_to_int(argv[2]);
 
   gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollbar), pImage);
   gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrollbar), GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);	
@@ -246,10 +290,8 @@ int interface(int argc, char **argv)
   pButton[9] = gtk_button_new_with_label("Rétablir l'image originale");
   gtk_box_pack_start(GTK_BOX(pVbox1), pButton[9], FALSE, FALSE, 0);
 
-
   g_signal_connect(G_OBJECT(pButton[0]), "clicked", G_CALLBACK(ouvrir_img), GTK_IMAGE(pImage));
   g_signal_connect(G_OBJECT(pButton[9]), "clicked", G_CALLBACK(retablir_img), GTK_IMAGE(pImage));
-
 
   /* 2ème frame */ /*contient zone de texte*/
   pVbox2Frame = gtk_frame_new("Résultat.txt");
@@ -269,8 +311,6 @@ int interface(int argc, char **argv)
   pBtnTxt = gtk_button_new_with_label("Sélectionnez fichier");
   gtk_box_pack_start(GTK_BOX(pVbox2), pBtnTxt, FALSE, FALSE, 0);
   g_signal_connect(G_OBJECT(pBtnTxt), "clicked", G_CALLBACK(saisie), NULL);
-
-
 
   /* 3ème frame à droite */ /*contient menu*/
   pVbox3Frame = gtk_frame_new("Menu"); /*Inclus dans HBox*/
@@ -299,17 +339,14 @@ int interface(int argc, char **argv)
 
   g_signal_connect(G_OBJECT(pButton[2]), "clicked", G_CALLBACK(greyscale),NULL);
   g_signal_connect(G_OBJECT(pButton[3]), "clicked", G_CALLBACK(binary),NULL);
-  //g_signal_connect(G_OBJECT(pButton[4]), "clicked", G_CALLBACK(flou), NULL)); 
-  //g_signal_connect(G_OBJECT(pButton[5]), "clicked", G_CALLBACK(rotation), NULL));  
+  //g_signal_connect(G_OBJECT(pButton[4]), "clicked", G_CALLBACK(flou), NULL); 
+  g_signal_connect(G_OBJECT(pButton[5]), "clicked", G_CALLBACK(rot_img), &rot);  
   g_signal_connect(G_OBJECT(pButton[1]), "clicked", G_CALLBACK(extract_data_from_image),NULL);  
   g_signal_connect(G_OBJECT(pButton[8]), "clicked", G_CALLBACK(gtk_main_quit), NULL); /*Quitte*/
   g_signal_connect(G_OBJECT(pButton[7]), "clicked", G_CALLBACK(save), NULL);
 
   gtk_widget_show_all(pWindow); //Affichage de pWindow et de ce qu'il contient
   gtk_main();
-
-
-  return 0;
 }
 
 void saisie(/*GtkButton *button*/)  /*Recherche du fichier*/
@@ -408,5 +445,7 @@ void retablir_img(GtkButton *button, GtkImage *pImage)
     remove("./Result/binary.bmp");
     remove("./Result/grey");
     remove("./Result/output.bmp");
+    remove("./Result/rotation.bmp");
+
   }
 }
