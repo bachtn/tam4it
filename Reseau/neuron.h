@@ -14,9 +14,8 @@
 
 #include <math.h>
 
-int neuron (int values[256], float weight[1][257], int idNeur);
-//double xorNeuro (double input1, double input2, struct vector *weight);
 //void improveWeight (struct vector *inputs, double result);
+char *network (int ***charList, int charNum);
 float **get_weight ();
 void set_weight (float **weight);
 
