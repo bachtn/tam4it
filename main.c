@@ -54,8 +54,8 @@ SDL_Surface* display_image(SDL_Surface *img)
         img->w, img->h, SDL_GetError());
   }
   /* Blit onto the screen surface */
-  /*if(SDL_BlitSurface(img, NULL, screen, NULL) < 0)
-    warnx("BlitSurface error: %s\n", SDL_GetError());*/
+  if(SDL_BlitSurface(img, NULL, screen, NULL) < 0)
+    warnx("BlitSurface error: %s\n", SDL_GetError());
 
   // Update the screen
   SDL_UpdateRect(screen, 0, 0, img->w, img->h);
@@ -202,7 +202,6 @@ int interface(int argc, char **argv)
             *scrollbar,
             *scrollbar2;
   GtkWidget  *pImage;
-  //	SDL_Surface *display;
   gtk_init(&argc, &argv);
 
   pWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL); //Creation
@@ -298,8 +297,6 @@ int interface(int argc, char **argv)
   gtk_box_pack_start(GTK_BOX(pVbox3), pButton[7], TRUE, TRUE, 0);
   gtk_box_pack_start(GTK_BOX(pVbox3), pButton[8], TRUE, TRUE, 0);
 
-
-
   g_signal_connect(G_OBJECT(pButton[2]), "clicked", G_CALLBACK(greyscale),NULL);
   g_signal_connect(G_OBJECT(pButton[3]), "clicked", G_CALLBACK(binary),NULL);
   //g_signal_connect(G_OBJECT(pButton[4]), "clicked", G_CALLBACK(flou), NULL)); 
@@ -312,14 +309,7 @@ int interface(int argc, char **argv)
   gtk_main();
 
 
-  //gtk_widget_destroy(pWindow); //Detruction
   return 0;
-}
-
-
-void OnDestroy(/*GtkWidget *pWidget, gpointer pData*/)
-{
-  gtk_main_quit(); //Arret de la boucle
 }
 
 void saisie(/*GtkButton *button*/)  /*Recherche du fichier*/
@@ -385,8 +375,6 @@ void save() //sauvegarde du fichier .txt
   GtkTextIter start;
   GtkTextIter end;
   gchar *text;
-  //gboolean result;
-  //GError *err;
   FILE *file;
 
 
@@ -406,15 +394,6 @@ void save() //sauvegarde du fichier .txt
     fprintf(file, "%s",text); 
   }
   fclose(file);
-  //result = g_file_set_contents ("./output.txt", text, -1, &err);
-
-  /*if (result == FALSE)
-    {
-  //error saving file, show message to user 
-  error_message (err->message);
-  g_error_free (err);
-  } */       
-
   g_free (text); 
 
 
@@ -425,8 +404,9 @@ void retablir_img(GtkButton *button, GtkImage *pImage)
   if(button){
     GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file("./Result/backup.bmp",NULL); //chargement du resultat des traitement image
     gtk_image_set_from_pixbuf((GtkImage*) pImage, pixbuf);
+    remove("./Result/detection.bmp");
+    remove("./Result/binary.bmp");
+    remove("./Result/grey");
+    remove("./Result/output.bmp");
   }
-
 }
-
-
