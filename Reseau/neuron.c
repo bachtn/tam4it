@@ -71,7 +71,7 @@ void initializationWeights () //create and initialized weight.wgt to 0
   fclose (weight_file);
 }
 
-int main(int argc, char *argv[])
+/*int main(int argc, char *argv[])
 {
   if (argc > 1){
     switch (*argv[1]){
@@ -94,4 +94,4 @@ int main(int argc, char *argv[])
   else
     printf ("no arguements\n");
   return 0;
-}
+}*/
