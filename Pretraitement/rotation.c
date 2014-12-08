@@ -43,7 +43,7 @@ void detection(SDL_Surface *image)
         for(int a = 0; a<15; a++) //test pour chaque angle
         {
                 img  = SDL_ConvertSurface(image, image->format, image->flags);
-                rotation(img, M_PI * (a) / 180);
+                rotation(&img, M_PI * (a) / 180);
                 for(int i =0; i<img->h; i++) //compte le nb de pixel noir
                 {
                         for(int j = 0; j <img->w; j++)
@@ -75,5 +75,5 @@ void detection(SDL_Surface *image)
                         max_variance = l;
         }
         angle = max_variance; //angle correspondant
-        rotation(image, M_PI * (angle) / 180); //rotation definitive
+        rotation(&image, M_PI * (angle) / 180); //rotation definitive
 }

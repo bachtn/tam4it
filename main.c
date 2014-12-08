@@ -68,6 +68,64 @@ SDL_Surface* display_image(SDL_Surface *img)
   return screen;
 }
 
+void convo()
+{
+  char* bckp = "./Result/backup.bmp";
+  char* output = "./Result/output.bmp";
+  char* output_c = "./Result/convo.bmp";
+
+  const char  mask_blur[]  = {
+    1, 1, 1,
+    1, 1, 1,
+    1, 1, 1
+  };
+
+  SDL_Surface *img = NULL;
+
+
+  if(isFileExist(output))
+    img = loadImage(output);
+  else if(isFileExist(bckp))
+    img = loadImage(bckp);
+  else
+    exit(EXIT_FAILURE);
+
+  Convolution(img, mask_blur);
+
+  SDL_SaveBMP(img,  output_c);
+  SDL_SaveBMP(img,  output);
+
+  SDL_FreeSurface(img);
+
+}
+
+void median()
+{
+  char* bckp = "./Result/backup.bmp";
+  char* output = "./Result/output.bmp";
+  char* output_m = "./Result/median.bmp";
+
+  SDL_Surface *img = NULL;
+
+
+  if(isFileExist(output))
+    img = loadImage(output);
+  else if(isFileExist(bckp))
+    img = loadImage(bckp);
+  else
+    exit(EXIT_FAILURE);
+
+  Median(img);
+
+  SDL_SaveBMP(img,  output_m);
+  SDL_SaveBMP(img,  output);
+
+  SDL_FreeSurface(img);
+
+}
+
+
+
 void greyscale()
 {
   char* bckp = "./Result/backup.bmp";
@@ -215,16 +273,16 @@ int main (int argc, char* argv[])
 
 int string_to_int(char *s)
 {
-	int r = 0;
-	int i = 0;
-	while(i<3)
-	{
-		r*=10;
-		r+=(int) *s;
-		s++;
-		i++;
-	}
-	return r;
+  int r = 0;
+  int i = 0;
+  while(i<3)
+  {
+    r*=10;
+    r+=(int) *s;
+    s++;
+    i++;
+  }
+  return r;
 }
 
 void interface(int argc, char **argv)
@@ -247,7 +305,7 @@ void interface(int argc, char **argv)
   gtk_init(&argc, &argv);
 
   int rot = 0;
- 
+
   pWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL); //Creation
   gtk_window_set_title(GTK_WINDOW(pWindow), "Mental Twist Algorithm");
   gtk_window_set_default_size(GTK_WINDOW(pWindow), 1000, 1000);
@@ -327,10 +385,13 @@ void interface(int argc, char **argv)
   pButton[3] = gtk_button_new_with_label("Noir et blanc");
   pButton[4] = gtk_button_new_with_label("Flou");
   pButton[5] = gtk_button_new_with_label("Rotation");
+  pButton[9] = gtk_button_new_with_label("Median");
 
-  gtk_box_pack_start(GTK_BOX(pVbox3), pButton[2], TRUE, TRUE, 0); /*Dans Vbox3*/
+
+  gtk_box_pack_start(GTK_BOX(pVbox3), pButton[4], TRUE, TRUE, 0); /*Dans Vbox3*/
+  gtk_box_pack_start(GTK_BOX(pVbox3), pButton[9], TRUE, TRUE, 0);
+  gtk_box_pack_start(GTK_BOX(pVbox3), pButton[2], TRUE, TRUE, 0);
   gtk_box_pack_start(GTK_BOX(pVbox3), pButton[3], TRUE, TRUE, 0);
-  gtk_box_pack_start(GTK_BOX(pVbox3), pButton[4], TRUE, TRUE, 0);
   gtk_box_pack_start(GTK_BOX(pVbox3), pButton[5], TRUE, TRUE, 0);
   gtk_box_pack_start(GTK_BOX(pVbox3), pButton[1], TRUE, TRUE, 0);
   gtk_box_pack_start(GTK_BOX(pVbox3), pButton[6], TRUE, TRUE, 0);
@@ -339,7 +400,8 @@ void interface(int argc, char **argv)
 
   g_signal_connect(G_OBJECT(pButton[2]), "clicked", G_CALLBACK(greyscale),NULL);
   g_signal_connect(G_OBJECT(pButton[3]), "clicked", G_CALLBACK(binary),NULL);
-  //g_signal_connect(G_OBJECT(pButton[4]), "clicked", G_CALLBACK(flou), NULL); 
+  g_signal_connect(G_OBJECT(pButton[9]), "clicked", G_CALLBACK(median), NULL); 
+  g_signal_connect(G_OBJECT(pButton[4]), "clicked", G_CALLBACK(convo), NULL); 
   g_signal_connect(G_OBJECT(pButton[5]), "clicked", G_CALLBACK(rot_img), &rot);  
   g_signal_connect(G_OBJECT(pButton[1]), "clicked", G_CALLBACK(extract_data_from_image),NULL);  
   g_signal_connect(G_OBJECT(pButton[8]), "clicked", G_CALLBACK(gtk_main_quit), NULL); /*Quitte*/

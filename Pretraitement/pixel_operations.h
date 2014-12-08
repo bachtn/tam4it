@@ -24,4 +24,7 @@ int convert(Uint32 pixel, SDL_Surface *image);
 //
 int IsValid(int xMax, int yMax, int x,  int y);
 
+//
+int** dyn_array(SDL_Surface *img);
+
 # endif

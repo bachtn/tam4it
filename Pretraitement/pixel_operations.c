@@ -72,3 +72,19 @@ int IsValid(int xMax, int yMax, int x,  int y)  {
     else
         return 1;
 }
+
+int** dyn_array(SDL_Surface *img) {
+  int width = img->w, height  = img->h, i, j, x;
+  int **array   = malloc(height * sizeof(int  *));
+  for (j = 0;  j < height; ++j)  {
+      array[j]  = malloc(width  * sizeof(int));
+      for (i  = 0;  i < width;  ++i)  {
+          if (convert(getpixel(img,i,j),img)  ==  255)
+              x = 0;
+          else
+              x = 1;
+          array[j][i] = x;
+      }
+  }
+  return  array;
+}

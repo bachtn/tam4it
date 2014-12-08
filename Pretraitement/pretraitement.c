@@ -91,23 +91,28 @@ void whiteBlack(SDL_Surface *image)
   }
 }
 
-const char  mask_fuzzy[]  = {
-  1, 1, 1,
-  1, 1, 1,
-  1, 1, 1
-};
 
-void Fuzzy(SDL_Surface *img, SDL_Surface *imgnv, const char  mask[])  {
+
+void Convolution(SDL_Surface *img, const char  mask[])  {
+    int sum;
     Uint32  pixel;
+    int **array = malloc(img->h * sizeof(int  *));
+    for (int  j = 0;  j < img->h; ++j)  {
+        array[j]  = malloc(img->w * sizeof(int));
+        for (int  i = 0;  i < img->w; ++i)  {
+            array[j][i] = convert(getpixel(img, i,  j), img);
+        }
+    }
     for (int j  = 1;  j < img->h  - 1; ++j)
         for (int  i = 1;  i < img->w  - 1; ++i) {
-            int sum = 0;
+            sum = 0;
             for (int  dy  = j - 1;  dy  <=  j + 1;  ++dy)
                 for (int  dx  = i - 1;  dx  <=  i + 1;  ++dx)
-                      sum = sum + convert(getpixel(img,dx,dy),img)  * mask[dx - i + 1 + (dy - j + 1) * (dx - i + 1)];
+                    if (IsValid(img->w, img->h, i,  j)  ==  0)
+                      sum = sum + array[dy][dx]  * mask[dx - i + 1 + (dy - j + 1) * (dx - i + 1)];
             sum = sum / 9;
             pixel = SDL_MapRGB(img->format, sum, sum, sum);
-            putpixel(imgnv,i,j,pixel);
+            putpixel(img,i,j,pixel);
         }
 }
 
@@ -132,20 +137,30 @@ int Median_tmp(int  *tab, int tabLength) {
 }
        
 
-void Median(SDL_Surface *img, SDL_Surface *imgnv) {
-    Uint32  pixel;
+void Median(SDL_Surface *img) {
+    int z,  r;
+    Uint32 pixel;
+    int **array = malloc(img->h * sizeof(int  *));
+    for (int  j = 0;  j < img->h; ++j)  {
+        array[j]  = malloc(img->w * sizeof(int));
+        for (int  i = 0;  i < img->w; ++i)  {
+            array[j][i] = convert(getpixel(img, i,  j), img);
+        }
+    }
     int *tab =  malloc(9  * sizeof(int));
     for ( int j = 1;  j < img->h  - 1;  ++j)
         for (int  i = 1;  i < img->w  - 1;  ++i)  {
-            int z = 0;
+            z = 0;
             for (int  dy  = j - 1;  dy  <=  j + 1;  ++dy)
                 for (int  dx  = i - 1;  dx  <=  i + 1;  ++dx) {
-                        tab[z]  = convert(getpixel(img,dx,dy),img);
+                    if (IsValid(img->w, img->h, i,  j)  ==  0)  {
+                        tab[z]  = array[dy][dx];
                         ++z;
                     }
-            int r = Median_tmp(tab,z);
-            pixel = SDL_MapRGB(imgnv->format, r,r,r);
-            putpixel(imgnv,i,j,pixel);
+                }
+            r = Median_tmp(tab,z);
+            pixel = SDL_MapRGB(img->format, r,r,r);
+            putpixel(img,i,j,pixel);
         }
 }
                         
